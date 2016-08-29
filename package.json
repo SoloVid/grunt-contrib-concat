@@ -1,10 +1,10 @@
 {
   "name": "grunt-ordered-concat",
-  "description": "Concatenate files allowing for simple dependency specification.",
+  "description": "Concatenate files allowing for simple dependency specification. (Forked from grunt-contrib-concat)",
   "version": "1.0.1",
   "author": {
-    "name": "Grunt Team",
-    "url": "http://gruntjs.com/"
+    "name": "SoloVid",
+    "url": "http://www.solovid.com"
   },
   "repository": "SoloVid/grunt-ordered-concat",
   "license": "MIT",

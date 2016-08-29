@@ -1,4 +1,4 @@
-# grunt-ordered-oconcat v1.0.1
+# grunt-ordered-concat v1.0.1
 
 > Concatenate files allowing for simple dependency specification.
 
