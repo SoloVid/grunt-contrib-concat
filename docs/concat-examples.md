@@ -1,13 +1,22 @@
 # Usage Examples
 
+## Specifying a dependency in code
+
+This example demonstrates how to ensure certain files are concatenated before other files. Using the dependsOn() directive anywhere in a source file will ensure that the indicated file (which also must be included in the source) is placed concatenated before this file.
+
+```js
+dependsOn("path/relative/to/file.js");
+dependsOn("/path/relative/to/project/file.js");
+```
+
 ## Concatenating with a custom separator
 
-In this example, running `grunt concat:dist` (or `grunt concat` because `concat` is a [multi task][multitask]) will concatenate the three specified source files (in order), joining files with `;` and writing the output to `dist/built.js`.
+In this example, running `grunt oconcat:dist` (or `grunt oconcat` because `oconcat` is a [multi task][multitask]) will concatenate the three specified source files (in order), joining files with `;` and writing the output to `dist/built.js`.
 
 ```js
 // Project configuration.
 grunt.initConfig({
-  concat: {
+  oconcat: {
     options: {
       separator: ';',
     },
@@ -21,7 +30,7 @@ grunt.initConfig({
 
 ## Banner comments
 
-In this example, running `grunt concat:dist` will first strip any preexisting banner comment from the `src/project.js` file, then concatenate the result with a newly-generated banner comment, writing the output to `dist/built.js`.
+In this example, running `grunt oconcat:dist` will first strip any preexisting banner comment from the `src/project.js` file, then concatenate the result with a newly-generated banner comment, writing the output to `dist/built.js`.
 
 This generated banner will be the contents of the `banner` template string interpolated with the config object. In this case, those properties are the values imported from the `package.json` file (which are available via the `pkg` config property) plus today's date.
 
@@ -31,7 +40,7 @@ _Note: you don't have to use an external JSON file. It's also valid to create th
 // Project configuration.
 grunt.initConfig({
   pkg: grunt.file.readJSON('package.json'),
-  concat: {
+  oconcat: {
     options: {
       stripBanners: true,
       banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
@@ -47,14 +56,14 @@ grunt.initConfig({
 
 ## Multiple targets
 
-In this example, running `grunt concat` will build two separate files. One "basic" version, with the main file essentially just copied to `dist/basic.js`, and another "with_extras" concatenated version written to `dist/with_extras.js`.
+In this example, running `grunt oconcat` will build two separate files. One "basic" version, with the main file essentially just copied to `dist/basic.js`, and another "with_extras" concatenated version written to `dist/with_extras.js`.
 
-While each concat target can be built individually by running `grunt concat:basic` or `grunt concat:extras`, running `grunt concat` will build all concat targets. This is because `concat` is a [multi task][multitask].
+While each oconcat target can be built individually by running `grunt oconcat:basic` or `grunt oconcat:extras`, running `grunt oconcat` will build all oconcat targets. This is because `oconcat` is a [multi task][multitask].
 
 ```js
 // Project configuration.
 grunt.initConfig({
-  concat: {
+  oconcat: {
     basic: {
       src: ['src/main.js'],
       dest: 'dist/basic.js',
@@ -69,7 +78,7 @@ grunt.initConfig({
 
 ## Multiple files per target
 
-Like the previous example, in this example running `grunt concat` will build two separate files. One "basic" version, with the main file essentially just copied to `dist/basic.js`, and another "with_extras" concatenated version written to `dist/with_extras.js`.
+Like the previous example, in this example running `grunt oconcat` will build two separate files. One "basic" version, with the main file essentially just copied to `dist/basic.js`, and another "with_extras" concatenated version written to `dist/with_extras.js`.
 
 This example differs in that both files are built under the same target.
 
@@ -78,7 +87,7 @@ Using the `files` object, you can have list any number of source-destination pai
 ```js
 // Project configuration.
 grunt.initConfig({
-  concat: {
+  oconcat: {
     basic_and_extras: {
       files: {
         'dist/basic.js': ['src/main.js'],
@@ -93,13 +102,13 @@ grunt.initConfig({
 
 Filenames can be generated dynamically by using `<%= %>` delimited underscore templates as filenames.
 
-In this example, running `grunt concat:dist` generates a destination file whose name is generated from the `name` and `version` properties of the referenced `package.json` file (via the `pkg` config property).
+In this example, running `grunt oconcat:dist` generates a destination file whose name is generated from the `name` and `version` properties of the referenced `package.json` file (via the `pkg` config property).
 
 ```js
 // Project configuration.
 grunt.initConfig({
   pkg: grunt.file.readJSON('package.json'),
-  concat: {
+  oconcat: {
     dist: {
       src: ['src/main.js'],
       dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.js',
@@ -110,7 +119,7 @@ grunt.initConfig({
 
 ## Advanced dynamic filenames
 
-In this more involved example, running `grunt concat` will build two separate files (because `concat` is a [multi task][multitask]). The destination file paths will be expanded dynamically based on the specified templates, recursively if necessary.
+In this more involved example, running `grunt oconcat` will build two separate files (because `oconcat` is a [multi task][multitask]). The destination file paths will be expanded dynamically based on the specified templates, recursively if necessary.
 
 For example, if the `package.json` file contained `{"name": "awesome", "version": "1.0.0"}`, the files `dist/awesome/1.0.0/basic.js` and `dist/awesome/1.0.0/with_extras.js` would be generated.
 
@@ -122,7 +131,7 @@ grunt.initConfig({
     src: 'src/files',
     dest: 'dist/<%= pkg.name %>/<%= pkg.version %>',
   },
-  concat: {
+  oconcat: {
     basic: {
       src: ['<%= dirs.src %>/main.js'],
       dest: '<%= dirs.dest %>/basic.js',
@@ -136,11 +145,11 @@ grunt.initConfig({
 ```
 
 ## Invalid or Missing Files Warning
-If you would like the `concat` task to warn if a given file is missing or invalid be sure to set `nonull` to `true`:
+If you would like the `oconcat` task to warn if a given file is missing or invalid be sure to set `nonull` to `true`:
 
 ```js
 grunt.initConfig({
-  concat: {
+  oconcat: {
     missing: {
       src: ['src/invalid_or_missing_file'],
       dest: 'compiled.js',
@@ -158,7 +167,7 @@ If you would like to do any custom processing before concatenating, use a custom
 
 ```js
 grunt.initConfig({
-  concat: {
+  oconcat: {
     dist: {
       options: {
         // Replace all 'use strict' statements in the code with a single one at the top

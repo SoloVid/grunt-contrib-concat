@@ -1,5 +1,5 @@
 /*
-* grunt-contrib-concat
+* grunt-ordered-concat
 * http://gruntjs.com/
 *
 * Copyright (c) 2016 "Cowboy" Ben Alman, contributors
@@ -185,7 +185,7 @@ module.exports = function(grunt) {
         fileContentsMap[path.join(filepath)] = src;
         //return src;
       });
-      
+
       // Concat banner + specified files + footer.
       var src = banner + concatInOrder(fileContentsMap)/*.join(options.separator)*/ + footer;
 

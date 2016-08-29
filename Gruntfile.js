@@ -1,10 +1,10 @@
 /*
- * grunt-contrib-concat
- * http://gruntjs.com/
- *
- * Copyright (c) 2016 "Cowboy" Ben Alman, contributors
- * Licensed under the MIT license.
- */
+* grunt-contrib-concat
+* http://gruntjs.com/
+*
+* Copyright (c) 2016 "Cowboy" Ben Alman, contributors
+* Licensed under the MIT license.
+*/
 
 'use strict';
 
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
         options: {
           process: function(src, filepath) {
             return '// Source: ' + filepath + '\n' +
-              src.replace(/file(\d)/, 'f$1');
+            src.replace(/file(\d)/, 'f$1');
           }
         },
         files: {
@@ -150,45 +150,45 @@ module.exports = function(grunt) {
             'test/fixtures/css2.css'
           ]
         }
-    },
-    dependencies_basic: {
+      },
+      dependencies_basic: {
         files: {
           'tmp/dependencies_basic.js': [
-              'test/fixtures/dependency1.js',
-              'test/fixtures/dependency2.js',
-              'test/fixtures/dependency3.js',
+            'test/fixtures/dependency1.js',
+            'test/fixtures/dependency2.js',
+            'test/fixtures/dependency3.js',
             'test/fixtures/dependency4.js'
           ]
         }
-    },
-    dependencies_circular: {
+      },
+      dependencies_circular: {
         files: {
           'tmp/dependencies_circular.js': [
-              'test/fixtures/dependencyCircular1.js',
-              'test/fixtures/dependencyCircular2.js',
-              'test/fixtures/dependencyCircular3.js'
+            'test/fixtures/dependencyCircular1.js',
+            'test/fixtures/dependencyCircular2.js',
+            'test/fixtures/dependencyCircular3.js'
           ]
         }
-    },
-    dependencies_invalid_file: {
+      },
+      dependencies_invalid_file: {
         files: {
           'tmp/dependencies_invalid_file.js': [
-              'test/fixtures/dependencyInvalidFile.js'
+            'test/fixtures/dependencyInvalidFile.js'
           ]
         }
-    },
-    dependencies_root: {
+      },
+      dependencies_root: {
         options: {
-            root: "test"
+          root: "test"
         },
         files: {
           'tmp/dependencies_root.js': [
-              'test/fixtures/dependencyRootOption.js',
-              'test/fixtures/file0',
-              'test/fixtures/file1'
+            'test/fixtures/dependencyRootOption.js',
+            'test/fixtures/file0',
+            'test/fixtures/file1'
           ]
         }
-    }
+      }
     },
 
     // Unit tests.

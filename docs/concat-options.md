@@ -51,6 +51,12 @@ _(Default processing options are explained in the [grunt.template.process][] doc
   [templates]: https://github.com/gruntjs/grunt-docs/blob/master/grunt.template.md
   [grunt.template.process]: https://github.com/gruntjs/grunt-docs/blob/master/grunt.template.md#grunttemplateprocess
 
+## root
+Type: `String`
+Default: `.`
+
+Set to project's root directory (for dependency purposes) is different than the parent directory of Gruntfile.js.
+
 ## sourceMap
 Type: `Boolean`  
 Default: `false`
