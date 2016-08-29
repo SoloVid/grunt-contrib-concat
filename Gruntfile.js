@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     bannerProperty: 'AWESOME',
-    concat: {
+    oconcat: {
       default_options: {
         files: {
           'tmp/default_options': ['test/fixtures/file1', 'test/fixtures/file2']
@@ -150,7 +150,45 @@ module.exports = function(grunt) {
             'test/fixtures/css2.css'
           ]
         }
-      }
+    },
+    dependencies_basic: {
+        files: {
+          'tmp/dependencies_basic.js': [
+              'test/fixtures/dependency1.js',
+              'test/fixtures/dependency2.js',
+              'test/fixtures/dependency3.js',
+            'test/fixtures/dependency4.js'
+          ]
+        }
+    },
+    dependencies_circular: {
+        files: {
+          'tmp/dependencies_circular.js': [
+              'test/fixtures/dependencyCircular1.js',
+              'test/fixtures/dependencyCircular2.js',
+              'test/fixtures/dependencyCircular3.js'
+          ]
+        }
+    },
+    dependencies_invalid_file: {
+        files: {
+          'tmp/dependencies_invalid_file.js': [
+              'test/fixtures/dependencyInvalidFile.js'
+          ]
+        }
+    },
+    dependencies_root: {
+        options: {
+            root: "test"
+        },
+        files: {
+          'tmp/dependencies_root.js': [
+              'test/fixtures/dependencyRootOption.js',
+              'test/fixtures/file0',
+              'test/fixtures/file1'
+          ]
+        }
+    }
     },
 
     // Unit tests.
@@ -171,7 +209,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['jshint', 'clean', 'concat', 'nodeunit']);
+  grunt.registerTask('test', ['jshint', 'clean', 'oconcat', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['test', 'build-contrib']);

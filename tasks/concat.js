@@ -1,10 +1,10 @@
 /*
- * grunt-contrib-concat
- * http://gruntjs.com/
- *
- * Copyright (c) 2016 "Cowboy" Ben Alman, contributors
- * Licensed under the MIT license.
- */
+* grunt-contrib-concat
+* http://gruntjs.com/
+*
+* Copyright (c) 2016 "Cowboy" Ben Alman, contributors
+* Licensed under the MIT license.
+*/
 
 'use strict';
 
@@ -14,8 +14,9 @@ module.exports = function(grunt) {
   var comment = require('./lib/comment').init(grunt);
   var chalk = require('chalk');
   var sourcemap = require('./lib/sourcemap').init(grunt);
+  var path = require('path');
 
-  grunt.registerMultiTask('concat', 'Concatenate files.', function() {
+  grunt.registerMultiTask('oconcat', 'Concatenate files allowing dependent order.', function() {
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
       separator: grunt.util.linefeed,
@@ -25,7 +26,8 @@ module.exports = function(grunt) {
       process: false,
       sourceMap: false,
       sourceMapName: undefined,
-      sourceMapStyle: 'embed'
+      sourceMapStyle: 'embed',
+      root: '.'
     });
 
     // Normalize boolean options that accept options objects.
@@ -47,7 +49,7 @@ module.exports = function(grunt) {
     // not make the source map.
     if (
       sourceMap && options.sourceMapStyle === 'link' &&
-        (options.stripBanners || options.process)
+      (options.stripBanners || options.process)
     ) {
       // Warn and exit if --force isn't set.
       grunt.warn(
@@ -69,15 +71,95 @@ module.exports = function(grunt) {
         sourceMapHelper.add(banner);
       }
 
-      // Concat banner + specified files + footer.
-      var src = banner + f.src.filter(function(filepath) {
+      function getPath(myPath, inFilePath) {
+        if(inFilePath.startsWith("/")) {
+          return path.join(options.root, inFilePath.slice(1));
+        }
+        else {
+          return path.join(path.dirname(myPath), inFilePath);
+        }
+      }
+
+      function concatInOrder(map) {
+        var output = "";
+        var concatted = {};
+        var dependencies = {};
+        var dependents = {};
+        var filepath;
+
+        function checkDependencies(filepath) {
+          dependencies[filepath] = dependencies[filepath] || [];
+          var src = map[filepath];
+          var hasUnconcattedDependencies = false;
+          map[filepath] = src.replace(/dependsOn\("((?:[^"\\]|\\.)*)"\);?(?:\r?\n)?/g, function(match, p1) {
+            var depPath = getPath(filepath, p1);
+            if(!concatted[p1] && filepath !== depPath) {
+              dependencies[filepath].push(depPath);
+              dependents[depPath] = dependents[depPath] || [];
+              dependents[depPath].push(filepath);
+              hasUnconcattedDependencies = true;
+            }
+            return "";
+          });
+          return !hasUnconcattedDependencies;
+        }
+
+        function resolveDependents(filepath) {
+          function doesntEqualFilepath(val) {
+            return val !== filepath;
+          }
+
+          output += map[filepath] + options.separator;
+          concatted[filepath] = true;
+          var myDependents = dependents[filepath] || [];
+          while(myDependents.length > 0) {
+            var dependent = myDependents.pop();
+            dependencies[dependent] = (dependencies[dependent] || []).filter(doesntEqualFilepath);
+            if(dependencies[dependent].length === 0) {
+              resolveDependents(dependent);
+            }
+          }
+        }
+
+        for(filepath in map) {
+          if(checkDependencies(filepath)) {
+            resolveDependents(filepath);
+          }
+        }
+        for(filepath in dependencies) {
+          var unhandledDeps = dependencies[filepath];
+          for(var i = 0; i < unhandledDeps.length; i++) {
+            var unhandledDep = unhandledDeps[i];
+            if (!grunt.file.exists(unhandledDep)) {
+              grunt.log.warn('Dependency "' + chalk.yellow(unhandledDep) + '" (referenced by ' + chalk.cyan(filepath) + ') not found.');
+            }
+            else if (!(unhandledDep in map)) {
+              grunt.log.warn('Dependency "' + chalk.yellow(unhandledDep) + '" (referenced by ' + chalk.cyan(filepath) + ') not in glob of configured files. (Add it to Gruntfile.js.)');
+            }
+            else {
+              grunt.log.warn('Circular dependencies including "' + chalk.yellow(unhandledDep) + '" (referenced by ' + chalk.cyan(filepath) + ').');
+            }
+          }
+          if(unhandledDeps.length > 0) {
+            grunt.log.warn('Source file "' + chalk.yellow(filepath) + '" ignored.');
+          }
+        }
+
+        output = output.slice(0, -options.separator.length);
+
+        return output;
+      }
+
+      var fileContentsMap = {};
+
+      f.src.filter(function(filepath) {
         // Warn on and remove invalid source files (if nonull was set).
         if (!grunt.file.exists(filepath)) {
           grunt.log.warn('Source file "' + filepath + '" not found.');
           return false;
         }
         return true;
-      }).map(function(filepath, i) {
+      }).forEach(function(filepath, i) {
         if (grunt.file.isDir(filepath)) {
           return;
         }
@@ -100,8 +182,12 @@ module.exports = function(grunt) {
             sourceMapHelper.add(options.separator);
           }
         }
-        return src;
-      }).join(options.separator) + footer;
+        fileContentsMap[path.join(filepath)] = src;
+        //return src;
+      });
+      
+      // Concat banner + specified files + footer.
+      var src = banner + concatInOrder(fileContentsMap)/*.join(options.separator)*/ + footer;
 
       if (sourceMapHelper) {
         sourceMapHelper.add(footer);
