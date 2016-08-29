@@ -106,5 +106,18 @@ exports.concat = {
     test.equal(actual, expected, 'should output the css map.');
 
     test.done();
+  },
+  dependencies: function(test) {
+    test.expect(2);
+
+    var actual = getNormalizedFile('tmp/dependencies_basic.js');
+    var expected = getNormalizedFile('test/expected/dependencies_basic.js');
+    test.equal(actual, expected, 'should display files ordered by dependency');
+
+    actual = getNormalizedFile('tmp/dependencies_root.js');
+    expected = getNormalizedFile('test/expected/dependencies_root.js');
+    test.equal(actual, expected, 'should display dependency chain');
+
+    test.done();
   }
 };

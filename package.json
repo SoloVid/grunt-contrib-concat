@@ -1,17 +1,17 @@
 {
-  "name": "grunt-contrib-concat",
-  "description": "Concatenate files.",
-  "version": "1.0.1",
+  "name": "grunt-ordered-concat",
+  "description": "Concatenate files allowing for simple dependency specification. (Forked from grunt-contrib-concat)",
+  "version": "1.0.0",
   "author": {
-    "name": "Grunt Team",
-    "url": "http://gruntjs.com/"
+    "name": "SoloVid",
+    "url": "http://www.solovid.com"
   },
-  "repository": "gruntjs/grunt-contrib-concat",
+  "repository": "SoloVid/grunt-ordered-concat",
   "license": "MIT",
   "engines": {
     "node": ">=0.10.0"
   },
-  "main": "tasks/concat.js",
+  "main": "tasks/oconcat.js",
   "scripts": {
     "test": "grunt test"
   },
@@ -34,6 +34,5 @@
   ],
   "files": [
     "tasks"
-  ],
-  "appveyor_id": "l42173901ms416km"
+  ]
 }
