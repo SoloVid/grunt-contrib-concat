@@ -1,4 +1,4 @@
-# grunt-ordered-concat v1.0.0
+# grunt-ordered-concat v1.0.0 (based on fork of grunt-contrib-concat)
 
 > Concatenate files allowing for simple dependency specification.
 
@@ -80,7 +80,7 @@ _(Default processing options are explained in the [grunt.template.process][] doc
   [grunt.template.process]: https://github.com/gruntjs/grunt-docs/blob/master/grunt.template.md#grunttemplateprocess
 
 #### root
-Type: `String`
+Type: `String`  
 Default: `.`
 
 Set to project's root directory (for dependency purposes) is different than the parent directory of Gruntfile.js.
