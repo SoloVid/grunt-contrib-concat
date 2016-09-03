@@ -93,7 +93,7 @@ module.exports = function(grunt) {
           var hasUnconcattedDependencies = false;
           map[filepath] = src.replace(/dependsOn\("((?:[^"\\]|\\.)*)"\);?(?:\r?\n)?/g, function(match, p1) {
             var depPath = getPath(filepath, p1);
-            if(!concatted[p1] && filepath !== depPath) {
+            if(!concatted[depPath] && filepath !== depPath) {
               dependencies[filepath].push(depPath);
               dependents[depPath] = dependents[depPath] || [];
               dependents[depPath].push(filepath);

@@ -1,7 +1,7 @@
 {
   "name": "grunt-ordered-concat",
   "description": "Concatenate files allowing for simple dependency specification. (Forked from grunt-contrib-concat)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "SoloVid",
     "url": "http://www.solovid.com"

@@ -1,4 +1,8 @@
+v1.0.1:
+    date: 2016-09-03
+    changes:
+        - Fixed bug with already cocatted dependencies.
 v1.0.0:
-  date: 2016-08-29
-  changes:
-    - Added dependsOn() "compiler" directive on top of grunt-contrib-concat fork.
+    date: 2016-08-29
+    changes:
+        - Added dependsOn() "compiler" directive on top of grunt-contrib-concat fork.
